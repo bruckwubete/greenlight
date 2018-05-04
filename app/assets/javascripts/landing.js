@@ -203,6 +203,12 @@
       }
     });
 
+
+
+    $('.center-panel-wrapper').on('click', '.sign-up-user-button', function () {
+        console.log("here")
+    });
+
     // enable tooltips
     var options = {
       selector: '.has-tooltip',

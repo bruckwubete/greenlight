@@ -113,7 +113,7 @@ en-US:
   ldap_error: Unable to connect to the LDAP server. Please check your LDAP configuration in the env file and ensure your server is running.
   logged_in_description_html: You are logged in as %{link}
   login: login
-  login_description: Want to record a meeting?
+  login_description: Already have an account?
   login_greenlight: Login to GreenLight
   logout: logout
   meeting: Meeting
@@ -173,6 +173,9 @@ en-US:
   return_to_room: Return to main page
   session_url_explanation: The meeting will be taking place using the following URL
   signin_text: Log in with %{provider}
+  signup: sign up
+  signup_description: Dont have an account?
+  signup_name: Your Name
   slack:
     meeting_end: "%{meeting} has ended."
     meeting_join: "%{user} joined %{meeting}.\n[Click here join!]"

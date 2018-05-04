@@ -13,4 +13,13 @@
   # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-<%= render layout: 'shared/new' do %><% end %>
+<div class="page-wrapper meetings">
+  <div class="container-fluid">
+
+    <div class="center-panel-wrapper">
+      <%= render layout: 'shared/center_panel' do %>
+          <%= render layout: 'shared/sign_up' do %><% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

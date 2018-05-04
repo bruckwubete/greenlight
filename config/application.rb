@@ -50,6 +50,8 @@ module Greenlight
     config.enable_qrcode_generation = ENV['ENABLE_QRCODE_GENERATION'] && ENV['ENABLE_QRCODE_GENERATION'] == "true"
     config.use_html5_by_default = ENV['USE_HTML5_BY_DEFAULT'] == "true"
 
+    config.force_https = true
+
     # SMTP and action mailer
     if config.mail_notifications
       config.smtp_from = ENV['SMTP_FROM']

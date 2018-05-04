@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-class UsersController < ActionController::Base
+class UsersController < ApplicationController
 
   # For updating a users background image.
   def update
@@ -36,6 +36,15 @@ class UsersController < ActionController::Base
 
     # Reload the page to apply changes and show flash messages.
     redirect_back(fallback_location: root_path)
+  end
+
+  def create
+    @new_user = User.new
+    @new_user.name = "David"
+    @new_user.email = "Code Artist"
+  end
+
+  def show
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170928183010) do
+ActiveRecord::Schema.define(version: 20180504183016) do
 
   create_table "users", force: :cascade do |t|
     t.string   "provider",                                null: false
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 20170928183010) do
     t.datetime "background_updated_at"
     t.string   "token"
     t.boolean  "use_html5",               default: false
+    t.string   "first_name"
+    t.string   "last_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["encrypted_id"], name: "index_users_on_encrypted_id", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true

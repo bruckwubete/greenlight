@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   resources :users, only: [:edit, :update]
   get '/users/login', to: 'sessions#new', as: :user_login
   get '/users/logout', to: 'sessions#destroy', as: :user_logout
+  get '/users/sign_up', to: 'users#create', as: :user_sign_up
 
   match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   get '/auth/failure', to: 'sessions#auth_failure'

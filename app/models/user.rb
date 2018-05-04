@@ -21,6 +21,7 @@ class User < ApplicationRecord
   validates_attachment :background,
                        :content_type => { :content_type => ["image/jpg", "image/jpeg", "image/gif", "image/png"] }
 
+
   def self.from_omniauth(auth_hash)
     user = find_or_initialize_by(uid: auth_hash['uid'], provider: auth_hash['provider'])
     user.username = self.send("#{auth_hash['provider']}_username", auth_hash) rescue nil
