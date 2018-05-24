@@ -15,20 +15,50 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: %i[saml google]
 
   before_create :set_encrypted_id
   has_attached_file :background
   validates_attachment :background,
                        :content_type => { :content_type => ["image/jpg", "image/jpeg", "image/gif", "image/png"] }
 
-  def self.from_omniauth(auth_hash)
-    user = find_or_initialize_by(uid: auth_hash['uid'], provider: auth_hash['provider'])
-    user.username = self.send("#{auth_hash['provider']}_username", auth_hash) rescue nil
-    user.email = self.send("#{auth_hash['provider']}_email", auth_hash) rescue nil
-    user.name = auth_hash['info']['name']
-    user.token = auth_hash['credentials']['token'] rescue nil
+  def self.from_omniauth_params(auth)
+    user = find_or_initialize_by(uid: auth['uid'], provider: auth['provider'])
+    user.name = auth["name"]
+    user.username = auth["username"]
+    user.email = auth["email"]
+    user.password = auth['password']
+    user.encrypted_id = "#{user.username}-#{Digest::SHA1.hexdigest(user.uid+user.provider)[0..7]}"
+    user.customer_info = auth["customer_info"]
     user.save!
     user
+  end
+  def self.from_omniauth(auth)
+    user = find_or_initialize_by(uid: auth['uid'], provider: auth['provider'])
+    user.name = send("#{auth['provider']}_name", auth)
+    user.username = send("#{auth['provider']}_username", auth)
+    user.email = send("#{auth['provider']}_email", auth)
+    user.password = SecureRandom.urlsafe_base64
+    user.encrypted_id = "#{user.username}-#{Digest::SHA1.hexdigest(user.uid+user.provider)[0..7]}"
+    user.save!
+    user
+  end
+
+
+  # Provider attributes.
+  def self.saml_name(auth)
+    auth['info']['first_name'] + ' ' + auth['info']['last_name']
+  end
+
+  def self.saml_username(auth)
+    auth['extra']['raw_info']['displayName']
+  end
+
+  def self.saml_email(auth)
+    auth['info']['email']
   end
 
   def self.twitter_username(auth_hash)
@@ -37,6 +67,10 @@ class User < ApplicationRecord
 
   def self.twitter_email(auth_hash)
     auth_hash['info']['email']
+  end
+
+  def self.google_name(auth)
+    auth['info']['name']
   end
 
   def self.google_username(auth_hash)

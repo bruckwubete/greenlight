@@ -18,8 +18,11 @@ require 'bigbluebutton_api'
 require 'digest/sha1'
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  protect_from_forgery prepend: true
+  before_action :authenticate_user!, if: proc { Rails.configuration.loadbalanced_configuration }
+
   before_action :set_locale
+  #skip_before_action :verify_authenticity_token
   MEETING_NAME_LIMIT = 200
   USER_NAME_LIMIT = 100
 
@@ -28,7 +31,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    @current_user ||= User.find_by(id: session[:user_id])
+    @current_user ||=  User.where(:id => session[:user_id]).first
   end
   helper_method :current_user
 
@@ -56,4 +59,18 @@ class ApplicationController < ActionController::Base
     Rails.configuration.enable_qrcode_generation
   end
   helper_method :qrcode_generation_enabled?
+
+  def authenticate_user!
+    sign_in(current_user) if current_user
+    if user_signed_in?
+      super
+    else
+      super
+    end
+  end
+
+  def omniauth_authorize_path(resource_name, provider)
+    send "#{resource_name}_omniauth_authorize_path", provider
+  end
+
 end

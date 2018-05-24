@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170928183010) do
+ActiveRecord::Schema.define(version: 20180522202128) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "users", force: :cascade do |t|
     t.string   "provider",                                null: false
@@ -27,11 +30,22 @@ ActiveRecord::Schema.define(version: 20170928183010) do
     t.datetime "background_updated_at"
     t.string   "token"
     t.boolean  "use_html5",               default: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["encrypted_id"], name: "index_users_on_encrypted_id", unique: true
-    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
-    t.index ["provider"], name: "index_users_on_provider"
-    t.index ["uid"], name: "index_users_on_uid"
+    t.string   "encrypted_password",      default: "",    null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",           default: 0,     null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.jsonb    "customer_info"
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["encrypted_id"], name: "index_users_on_encrypted_id", unique: true, using: :btree
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true, using: :btree
+    t.index ["provider"], name: "index_users_on_provider", using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["uid"], name: "index_users_on_uid", using: :btree
   end
 
 end

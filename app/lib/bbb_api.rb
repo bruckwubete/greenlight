@@ -20,19 +20,27 @@ module BbbApi
   META_HOOK_URL = "gl-webhooks-callback-url"
 
   def bbb_endpoint
-    Rails.configuration.bigbluebutton_endpoint
+    Rails.configuration.loadbalanced_configuration ? get_customer_bbb_endpoint : Rails.configuration.bigbluebutton_endpoint
   end
 
   def bbb_secret
-    Rails.configuration.bigbluebutton_secret
+    Rails.configuration.loadbalanced_configuration ? get_customer_bbb_secret : Rails.configuration.bigbluebutton_secret
   end
 
   def bbb
-    @bbb ||= BigBlueButton::BigBlueButtonApi.new(bbb_endpoint + "api", bbb_secret, "0.8")
+    @bbb ||= BigBlueButton::BigBlueButtonApi.new(bbb_endpoint, bbb_secret, "0.8")
   end
 
   def bbb_meeting_id(id)
     Digest::SHA1.hexdigest(Rails.application.secrets[:secret_key_base]+id).to_s
+  end
+
+  def get_customer_bbb_endpoint
+    current_user.customer_info["apiURL"]
+  end
+
+  def get_customer_bbb_secret
+    current_user.customer_info["secret"]
   end
 
   def random_password(length)

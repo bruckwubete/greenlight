@@ -5,25 +5,29 @@
 #   gem 'sqlite3'
 #
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
   pool: 5
   timeout: 5000
 
 development:
   <<: *default
-  database: db/development.sqlite3
+  database: db/greenlight_2_development
+  username: greenlight_launcher
+  password: admin123
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test.sqlite3
+  database: db/greenlight_2_test
+  username: greenlight_launcher
+  password: admin123
 
 production:
-  adapter: <%= ENV['DB_ADAPTER'] || 'sqlite3' %>
+  adapter: <%= ENV['DB_ADAPTER'] || 'postgresql' %>
   host: <%= ENV['DB_HOST'] %>
-  database: <%= ENV['DB_NAME'] || 'db/production/production.sqlite3' %>
+  database: <%= ENV['DB_NAME'] || 'db/greenlight_2_production' %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   pool: <%= ENV['DB_POOL'] || 5 %>

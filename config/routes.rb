@@ -16,6 +16,13 @@
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+
+  devise_for :users, controllers: {
+      omniauth_callbacks: 'users/omniauth_callbacks'
+  }
+
+  post "/users/auth/register_user" => "sessions#register_user"
+
   mount ActionCable.server => '/cable'
 
   match '/404', to: 'errors#not_found', via: :all
@@ -25,6 +32,8 @@ Rails.application.routes.draw do
   resources :users, only: [:edit, :update]
   get '/users/login', to: 'sessions#new', as: :user_login
   get '/users/logout', to: 'sessions#destroy', as: :user_logout
+
+  get '/auth/:provider', to: redirect('/users/auth/%{provider}')
 
   match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   get '/auth/failure', to: 'sessions#auth_failure'
@@ -47,6 +56,7 @@ Rails.application.routes.draw do
       post '/:id/wait', to: 'landing#wait_for_moderator', :constraints => {:id => disallow_slash}
       post '/:id/no_longer_wait', to: 'landing#no_longer_waiting', :constraints => {:id => disallow_slash}
       get '/:id/session_status_refresh', to: 'landing#session_status_refresh', :constraints => {:id => disallow_slash}
+      post '/statuses', to: 'landing#get_previous_meeting_statuses'
     end
     post '/:room_id/:id/callback', to: 'bbb#callback', :constraints => {:id => disallow_slash, :room_id => disallow_slash}
 

@@ -24,3 +24,7 @@ coverage
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# IDEs
+.idea
+.idea/**

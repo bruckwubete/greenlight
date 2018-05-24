@@ -17,6 +17,8 @@
 class SessionsController < ApplicationController
 
   skip_before_action :verify_authenticity_token
+  skip_before_action :authenticate_user!, only: :register_user
+  before_action :authenticate_server, only: :register_user
 
   def new
     # If LDAP is enabled, just route to it instead.
@@ -34,11 +36,22 @@ class SessionsController < ApplicationController
     redirect_to root_path
   end
 
+  def register_user
+    @current_user = User.from_omniauth_params(params)
+    session[:user_id] = @current_user.id
+    sign_in(@current_user)
+    render :json => {success: true, room_id: @current_user.encrypted_id, user_id: @current_user.id}, :status => 201
+    rescue => e
+      logger.error "Error authenticating via omniauth: #{e}"
+      redirect_to root_path
+  end
+
   def destroy
     if current_user
       session.delete(:user_id)
+      sign_out current_user
     end
-    redirect_to root_path
+    redirect_to "/"
   end
 
   def auth_failure
@@ -49,5 +62,10 @@ class SessionsController < ApplicationController
     else
       redirect_to root_path
     end
+  end
+
+  private
+  def authenticate_server
+    render :json => {success: false, message: "Failed to authenticate" }, :status => 401 and return unless request.headers["HTTP_AUTH_TOKEN"] == ENV["SECRET_KEY_BASE"]
   end
 end

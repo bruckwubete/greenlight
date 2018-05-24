@@ -46,4 +46,8 @@ module ApplicationHelper
   def omniauth_login_url(provider)
     "#{relative_root}/auth/#{provider}"
   end
+
+  def omniauth_authorize_path(resource_name, provider)
+    send "#{resource_name}_#{provider}_omniauth_authorize_path", provider
+  end
 end

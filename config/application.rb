@@ -36,11 +36,21 @@ module Greenlight
     config.i18n.default_locale = 'en-US'
     config.i18n.fallbacks = {'en' => 'en-US'}
 
-    # BigBlueButton
-    config.bigbluebutton_endpoint_default = 'http://test-install.blindsidenetworks.com/bigbluebutton/'
-    config.bigbluebutton_secret_default = '8cd8ef52e8e101574e400365b55e11a6'
-    config.bigbluebutton_endpoint = ENV['BIGBLUEBUTTON_ENDPOINT']  || config.bigbluebutton_endpoint_default
-    config.bigbluebutton_secret = ENV['BIGBLUEBUTTON_SECRET'] || config.bigbluebutton_secret_default
+    # Default credentials (test-install.blindsidenetworks.com/bigbluebutton).
+    config.bigbluebutton_endpoint_default = "http://test-install.blindsidenetworks.com/bigbluebutton/"
+    config.bigbluebutton_secret_default = "8cd8ef52e8e101574e400365b55e11a6"
+
+
+    config.loadbalanced_configuration = (ENV["USE_LOADBALANCED_CONFIGURATION"] == "true")
+    # Fetch credentials from a loadbalancer based on provider.
+    config.loadbalancer_endpoint = ENV["LOADBALANCER_ENDPOINT"]
+    config.loadbalancer_secret = ENV["LOADBALANCER_SECRET"]
+
+    # Use standalone BigBlueButton server.
+    config.bigbluebutton_endpoint = ENV["BIGBLUEBUTTON_ENDPOINT"] || config.bigbluebutton_endpoint_default
+    config.bigbluebutton_endpoint += "api" unless config.bigbluebutton_endpoint.ends_with?('api')
+    config.bigbluebutton_secret = ENV["BIGBLUEBUTTON_SECRET"] || config.bigbluebutton_secret_default
+
 
     # Greelight specific
     config.use_webhooks = ENV['GREENLIGHT_USE_WEBHOOKS'] && ENV['GREENLIGHT_USE_WEBHOOKS'] == "true"
