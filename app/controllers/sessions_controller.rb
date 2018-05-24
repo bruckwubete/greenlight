@@ -17,7 +17,7 @@
 class SessionsController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  skip_before_action :authenticate_user!, only: :register_user
+  skip_before_action :authenticate_user!, only: [:register_user, :new]
   before_action :authenticate_server, only: :register_user
 
   def new
@@ -51,7 +51,8 @@ class SessionsController < ApplicationController
       session.delete(:user_id)
       sign_out current_user
     end
-    redirect_to "/"
+    puts "herere"
+    redirect_to user_session_path
   end
 
   def auth_failure

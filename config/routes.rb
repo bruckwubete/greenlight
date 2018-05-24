@@ -17,6 +17,8 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
 
+  get '/users/sign_in', to: redirect("/users/login")
+
   devise_for :users, controllers: {
       omniauth_callbacks: 'users/omniauth_callbacks'
   }
