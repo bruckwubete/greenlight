@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
   helper_method :user_name_limit
 
   def bigbluebutton_endpoint_default?
-    Rails.configuration.bigbluebutton_endpoint_default == Rails.configuration.bigbluebutton_endpoint
+    !Rails.configuration.loadbalanced_configuration && Rails.configuration.bigbluebutton_endpoint_default == Rails.configuration.bigbluebutton_endpoint
   end
   helper_method :bigbluebutton_endpoint_default?
 

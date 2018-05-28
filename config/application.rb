@@ -37,7 +37,7 @@ module Greenlight
     config.i18n.fallbacks = {'en' => 'en-US'}
 
     # Default credentials (test-install.blindsidenetworks.com/bigbluebutton).
-    config.bigbluebutton_endpoint_default = "http://test-install.blindsidenetworks.com/bigbluebutton/"
+    config.bigbluebutton_endpoint_default = "http://test-install.blindsidenetworks.com/bigbluebutton/api"
     config.bigbluebutton_secret_default = "8cd8ef52e8e101574e400365b55e11a6"
 
 

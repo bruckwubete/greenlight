@@ -17,4 +17,4 @@ ADD . $APP_HOME
 RUN bundle install --without development test doc --deployment --clean
 RUN bundle exec rake assets:precompile --trace
 
-CMD ["scripts/default_start.sh"]
+CMD /usr/src/app/scripts/default_start.sh

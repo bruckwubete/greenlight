@@ -51,7 +51,6 @@ class SessionsController < ApplicationController
       session.delete(:user_id)
       sign_out current_user
     end
-    puts "herere"
     redirect_to user_session_path
   end
 
