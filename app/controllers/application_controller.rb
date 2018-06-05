@@ -73,4 +73,8 @@ class ApplicationController < ActionController::Base
     send "#{resource_name}_omniauth_authorize_path", provider
   end
 
+  def is_flashing_format?
+    false
+  end
+
 end
