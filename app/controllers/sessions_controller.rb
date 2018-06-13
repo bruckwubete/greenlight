@@ -66,6 +66,6 @@ class SessionsController < ApplicationController
 
   private
   def authenticate_server
-    render :json => {success: false, message: "Failed to authenticate" }, :status => 401 and return unless request.headers["HTTP_AUTH_TOKEN"] == ENV["SECRET_KEY_BASE"]
+    render :json => {success: false, message: "Failed to authenticate" }, :status => 401 and return unless request.headers["HTTP_AUTHORIZATION"].split.second == ENV["SECRET_KEY_BASE"]
   end
 end
