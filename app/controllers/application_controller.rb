@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
+    # Todo error out if more than one user
     @current_user = User.where(:encrypted_id => session[:user_id]).first
   end
   helper_method :current_user
@@ -61,6 +62,7 @@ class ApplicationController < ActionController::Base
   helper_method :qrcode_generation_enabled?
 
   def authenticate_user!
+    sign_in(current_user) if current_user
     if user_signed_in?
       super
     else
