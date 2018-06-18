@@ -38,7 +38,7 @@ class SessionsController < ApplicationController
 
   def register_user
     @current_user = User.from_omniauth_params(params)
-    session[:user_id] = @current_user.id
+    session[:user_id] ||= @current_user.id
     sign_in(@current_user)
     render :json => {success: true, room_id: @current_user.encrypted_id, user_id: @current_user.id}, :status => 201
     rescue => e
