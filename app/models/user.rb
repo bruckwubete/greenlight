@@ -30,7 +30,6 @@ class User < ApplicationRecord
     user.username = auth["username"]
     user.email = auth["email"]
     user.password = auth['password']
-    user.encrypted_id = "#{user.username.downcase[0..1]}-#{Digest::SHA1.hexdigest(user.uid+user.provider)[0..7]}"
     user.customer_info = auth["customer_info"]
     user.save!
     user
@@ -41,7 +40,6 @@ class User < ApplicationRecord
     user.username = send("#{auth['provider']}_username", auth)
     user.email = send("#{auth['provider']}_email", auth)
     user.password = SecureRandom.urlsafe_base64
-    user.encrypted_id = "#{user.username.downcase[0..1]}-#{Digest::SHA1.hexdigest(user.uid+user.provider)[0..7]}"
     user.save!
     user
   end
@@ -97,6 +95,6 @@ class User < ApplicationRecord
   end
 
   def set_encrypted_id
-    self.encrypted_id = "#{username[0..1]}-#{Digest::SHA1.hexdigest(uid+provider)[0..7]}"
+    self.encrypted_id = "#{username.downcase[0..1]}-#{Digest::SHA1.hexdigest(uid+provider)[0..7]}"
   end
 end
