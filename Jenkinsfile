@@ -5,15 +5,15 @@ pipeline {
             args '-p 3000:3000 -p 5000:5000' 
         }
     }
-    environment {
-        withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
+    withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
+        environment {
             appName = "$DOCKER_USER\\/greenlight"
+            CI = 'true'
+            DOCKER_API_VERSION = '1.23'
+            tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+            imageName = "${appName}:${tag}"
+            BUILDIMG = imageName
         }
-        CI = 'true'
-        DOCKER_API_VERSION = '1.23'
-        tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-        imageName = "${appName}:${tag}"
-        BUILDIMG = imageName
     }
     stages {
         stage('Build') {
@@ -35,11 +35,13 @@ pipeline {
             }
         }
         stage('Deploy') {
-             withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
-                sh '''
-                 sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $BUILDIMG/g" deployment.yaml | kubectl apply -f -
-               '''
-             }
+            steps {
+                 withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
+                    sh '''
+                     sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $BUILDIMG/g" deployment.yaml | kubectl apply -f -
+                   '''
+                 }
+            }
         }
     }
 }
