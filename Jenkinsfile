@@ -1,4 +1,4 @@
-def label = "worker-${UUID.randomUUID().toString()}"
+def label = "gl-builder-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
