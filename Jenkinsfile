@@ -8,7 +8,6 @@ pipeline {
     environment {
 
         CI = 'true'
-        DOCKER_API_VERSION = '1.23'
     }
     
     stages {
