@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'node:6-alpine'
-            args '-p 3000:3000 -p 5000:5000' 
+            image 'gcr.io/cloud-solutions-images/jenkins-k8s-slave'
+            args '-p 50000:50000' 
         }
     }
     environment {
