@@ -7,8 +7,10 @@ node {
   sh "git rev-parse --short HEAD > commit-id"
 ​
   tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-
-  appName = "$DOCKER_USER\\/greenlight"
+  withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
+      appName = "$DOCKER_USER\\/greenlight"
+  }
+  
   imageName = "${appName}:${tag}"
   env.BUILDIMG=imageName
   
