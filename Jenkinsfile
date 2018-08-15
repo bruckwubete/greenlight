@@ -6,22 +6,19 @@ pipeline {
         }
     }
     environment {
+        withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
+            appName = "$DOCKER_USER\\/greenlight"
+        }
         CI = 'true'
+        DOCKER_API_VERSION = '1.23'
+        tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+        imageName = "${appName}:${tag}"
+        BUILDIMG = imageName
     }
     stages {
         stage('Build') {
-            env.DOCKER_API_VERSION="1.23"
-
-            sh "git rev-parse --short HEAD > commit-id"
-
-            tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-            withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
-                appName = "$DOCKER_USER\\/greenlight"
-            }
-
-            imageName = "${appName}:${tag}"
-            env.BUILDIMG=imageName
             steps {
+                sh "git rev-parse --short HEAD > commit-id"
                 sh "docker build -t ${imageName} ."
             }
         }
