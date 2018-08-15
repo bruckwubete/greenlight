@@ -5,21 +5,25 @@ pipeline {
             args '-p 3000:3000 -p 5000:5000' 
         }
     }
-    withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
-        environment {
-            appName = "$DOCKER_USER\\/greenlight"
-            CI = 'true'
-            DOCKER_API_VERSION = '1.23'
-            tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-            imageName = "${appName}:${tag}"
-            BUILDIMG = imageName
-        }
+    environment {
+
+        CI = 'true'
+        DOCKER_API_VERSION = '1.23'
+        tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+
     }
+    
     stages {
         stage('Build') {
             steps {
-                sh "git rev-parse --short HEAD > commit-id"
-                sh "docker build -t ${imageName} ."
+                withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
+                     appName = "$DOCKER_USER\\/greenlight"
+                     imageName = "${appName}:${tag}"
+                     env.BUILDIMG = imageName
+                     sh "git rev-parse --short HEAD > commit-id"
+                     sh "docker build -t ${imageName} ."
+                }
+
             }
         }
         stage('Push') {
