@@ -17,13 +17,9 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
-                     appName = "$DOCKER_USER\\/greenlight"
-                     imageName = "${appName}:${tag}"
-                     env.BUILDIMG = imageName
                      sh "git rev-parse --short HEAD > commit-id"
-                     sh "docker build -t ${imageName} ."
+                     sh "docker build -t '$DOCKER_USER\\/greenlight:$tag' ."
                 }
-
             }
         }
         stage('Push') {
@@ -42,7 +38,7 @@ pipeline {
             steps {
                  withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
                     sh '''
-                     sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $BUILDIMG/g" deployment.yaml | kubectl apply -f -
+                     sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $DOCKER_USER\\/greenlight:$tag/g" deployment.yaml | kubectl apply -f -
                    '''
                  }
             }
