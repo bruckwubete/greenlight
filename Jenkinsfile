@@ -19,16 +19,20 @@ node {
     sh "docker build -t ${imageName} ."
   
   stage "Push"
-     sh '''
-        set +x
-        docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
-        set -x 
-     '''
+     withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER'), string(credentialsId: 'DOCKER_EMAIL', variable: 'DOCKER_EMAIL'), string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')]) {
+         sh '''
+            set +x
+            docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
+            set -x 
+         '''
+     }
      sh "docker push ${imageName}"
   
   stage "Deploy"
 ​
-    sh '''
-      sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $BUILDIMG/g" deployment.yaml | kubectl apply -f -
-    '''
+    withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
+       sh '''
+        sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $BUILDIMG/g" deployment.yaml | kubectl apply -f -
+      '''
+    }
 }
