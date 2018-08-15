@@ -16,7 +16,9 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
                      sh "git rev-parse --short HEAD > commit-id"
-                     tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+                     script {
+                         env.tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+                     }
                      sh "docker build -t '$DOCKER_USER\\/greenlight:$tag' ."
                 }
             }
