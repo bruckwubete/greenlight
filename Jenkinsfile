@@ -9,8 +9,6 @@ pipeline {
 
         CI = 'true'
         DOCKER_API_VERSION = '1.23'
-        tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-
     }
     
     stages {
@@ -18,6 +16,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_USER', variable: '	DOCKER_USER')]) {
                      sh "git rev-parse --short HEAD > commit-id"
+                     env.tag = readFile('commit-id').replace("\n", "").replace("\r", "")
                      sh "docker build -t '$DOCKER_USER\\/greenlight:$tag' ."
                 }
             }
