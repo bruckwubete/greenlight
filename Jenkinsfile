@@ -19,11 +19,7 @@ volumes: [
     stage('Build') {
         container('docker')  {
             withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER')]) {
-                 sh "git rev-parse --short HEAD > commit-id"
-                 script {
-                     env.tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-                 }
-                 sh "docker build -t '$DOCKER_USER\\/greenlight:$tag' ."
+                 sh "docker build -t '$DOCKER_USER\\/greenlight:${gitCommit}' ."
             }
         }
     }
@@ -43,7 +39,7 @@ volumes: [
         container('docker') {
              withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER')]) {
                 sh '''
-                 sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $DOCKER_USER\\/greenlight:$tag/g" deployment.yaml | kubectl apply -f -
+                 sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $DOCKER_USER\\/greenlight:${gitCommit}/g" deployment.yaml | kubectl apply -f -
                '''
              }
         }
