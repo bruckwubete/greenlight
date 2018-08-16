@@ -17,7 +17,7 @@ volumes: [
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
     
     stage('Build') {
-        steps {
+        container('docker')  {
             withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER')]) {
                  sh "git rev-parse --short HEAD > commit-id"
                  script {
@@ -28,7 +28,7 @@ volumes: [
         }
     }
     stage('Push') {
-        steps {
+        container('docker') {
               withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER'), string(credentialsId: 'DOCKER_EMAIL', variable: 'DOCKER_EMAIL'), string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')]) {
                   sh '''
                      set +x
@@ -40,7 +40,7 @@ volumes: [
         }
     }
     stage('Deploy') {
-        steps {
+        container('docker') {
              withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER')]) {
                 sh '''
                  sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $DOCKER_USER\\/greenlight:$tag/g" deployment.yaml | kubectl apply -f -
