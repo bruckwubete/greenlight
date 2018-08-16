@@ -29,8 +29,8 @@ volumes: [
                   sh '''
                      docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
                   '''
+                  sh "docker push '$DOCKER_USER/greenlight:${gitCommit}'"
               }
-              sh "docker push '$DOCKER_USER/greenlight:${gitCommit}'"
         }
     }
     stage('Deploy') {
