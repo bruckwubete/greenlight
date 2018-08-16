@@ -27,9 +27,7 @@ volumes: [
         container('docker') {
               withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER'), string(credentialsId: 'DOCKER_EMAIL', variable: 'DOCKER_EMAIL'), string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')]) {
                   sh '''
-                     set +x
-                     docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
-                     set -x 
+                     docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
                   '''
               }
               sh "docker push ${imageName}"
@@ -38,9 +36,9 @@ volumes: [
     stage('Deploy') {
         container('docker') {
              withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER')]) {
-                sh '''
-                 sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $DOCKER_USER\\/greenlight:${gitCommit}/g" deployment.yaml | kubectl apply -f -
-               '''
+                // sh '''
+               //  sed "s/^\\s*image: $DOCKER_USER\\/greenlight:.*/    image: $DOCKER_USER\\/greenlight:${gitCommit}/g" deployment.yaml | kubectl apply -f -
+               // '''
              }
         }
     }
