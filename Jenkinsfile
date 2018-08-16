@@ -19,7 +19,7 @@ volumes: [
     stage('Build') {
         container('docker')  {
             withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER')]) {
-                 sh "docker build -t '$DOCKER_USER\\/greenlight:${gitCommit}' ."
+                 sh "docker build -t '$DOCKER_USER/greenlight:${gitCommit}' ."
             }
         }
     }
