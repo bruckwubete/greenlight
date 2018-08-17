@@ -44,6 +44,11 @@ volumes: [
     }
     stage('Run kubectl') {
       container('kubectl') {
+         withCredentials([file(credentialsId: 'gl-launcher-staging-secrets', variable: 'gl-launcher-staging-secrets')]) {
+            sh '''
+              kubectl apply -f \$gl-launcher-staging-secrets
+            '''
+         }
         sh "kubectl get pods"
       }
     }
