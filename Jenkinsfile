@@ -16,6 +16,17 @@ volumes: [
     def shortGitCommit = "${gitCommit[0..10]}"
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
     
+    stage('Run kubectl') {
+      container('kubectl') {
+         withCredentials([file(credentialsId: 'gl-launcher-staging-secrets', variable: 'gl-launcher-staging-secrets')]) {
+            sh '''
+              kubectl apply -f $gl-launcher-staging-secrets
+            '''
+         }
+        sh "kubectl get pods"
+      }
+    }
+    
     stage('Build') {
         container('docker')  {
             withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER')]) {
@@ -41,16 +52,6 @@ volumes: [
                // '''
              }
         }
-    }
-    stage('Run kubectl') {
-      container('kubectl') {
-         withCredentials([file(credentialsId: 'gl-launcher-staging-secrets', variable: 'gl-launcher-staging-secrets')]) {
-            sh '''
-              kubectl apply -f \$gl-launcher-staging-secrets
-            '''
-         }
-        sh "kubectl get pods"
-      }
     }
     stage('Run helm') {
       container('helm') {
