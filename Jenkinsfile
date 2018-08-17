@@ -20,7 +20,7 @@ volumes: [
       container('kubectl') {
          withCredentials([file(credentialsId: 'gl-launcher-staging-secrets', variable: 'FILE')]) {
             sh '''
-              kubectl apply -f $FILE
+              kubectl get pods && kubectl apply -f $FILE
             '''
          }
         sh "kubectl get pods"
