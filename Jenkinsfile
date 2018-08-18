@@ -3,7 +3,7 @@ def label = "jenkins-execution-worker-${UUID.randomUUID().toString()}"
 podTemplate(label: label, cloud: 'kubernetes', containers: [
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.10.0-rc.3', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
   hostPathVolume(mountPath: '/usr/bin/docker', hostPath: '/usr/bin/docker'),
