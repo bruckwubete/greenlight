@@ -23,6 +23,7 @@ podTemplate(label: label, cloud: "${kubeCloud}", containers: [
             withCredentials([file(credentialsId: 'cloud-datastore-user-account-creds', variable: 'FILE')]) {
                 //sh "cat $FILE >> key.json"
                // sh "gcloud auth activate-service-account cloud-datastore-user-account --key-file=key.json"
+                sh "gcloud container clusters get-credentials bn-ci-cluster --zone us-central1-a --project ci-cd-for-bn"
                 sh "gcloud builds submit -t ${imageTag} ."
             }
       }
