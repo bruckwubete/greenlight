@@ -24,16 +24,16 @@ volumes: [
     def gitTag = myRepo.GIT_TAG
     def shortGitCommit = "${gitCommit[0..10]}"
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
+    def imageTag = "gcr.io/${project}/${appName}:${gitBranch}.${env.BUILD_NUMBER}.${gitCommit}"
    
     stage('Build and Publish') {
       container('gcloud') {
             withCredentials([file(credentialsId: 'cloud-datastore-user-account-creds', variable: 'FILE')]) {
                 sh "gcloud auth activate-service-account --key-file=$FILE"
                 if (kubeCloud == "staging") {
-                   def imageTag = "gcr.io/${project}/${appName}:${gitBranch}.${env.BUILD_NUMBER}.${gitCommit}"
                    sh "gcloud docker -- build -t ${imageTag} . && gcloud docker -- push ${imageTag}"
                 } else {
-                   def imageTag = "gcr.io/${project}/${appName}:${gitTag}"
+                   imageTag = "gcr.io/${project}/${appName}:${gitTag}"
                    withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER'), string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')]) {
                      sh "gcloud docker -- build -t ${imageTag} -t '$DOCKER_USER/${project}:${greenlightVersion}' -t '$DOCKER_USER/${project}:${gitTag}' . && gcloud docker -- push ${imageTag}"
                      sh "docker login -u $DOCKER_USER -p $DOCKER_PASSWORD"
