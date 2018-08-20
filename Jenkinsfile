@@ -29,7 +29,7 @@ volumes: [
       container('gcloud') {
             withCredentials([file(credentialsId: 'cloud-datastore-user-account-creds', variable: 'FILE')]) {
                 sh "gcloud auth activate-service-account --key-file=$FILE"
-                if (kubecloud == "staging")) {
+                if (kubecloud == "staging") {
                    def imageTag = "gcr.io/${project}/${appName}:${gitBranch}.${env.BUILD_NUMBER}.${gitCommit}"
                    sh "gcloud docker -- build -t ${imageTag} . && gcloud docker -- push ${imageTag}"
                 } else {
