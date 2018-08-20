@@ -7,8 +7,8 @@ if (env.BRANCH_NAME == "production") {
   kubeCloud = "staging"
 }
 podTemplate(label: label, cloud: "${kubeCloud}", containers: [
-  containerTemplate(name: 'gcloud', image: 'lakoo/node-gcloud-docker', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'gcloud', image: "gcr.io/${project}/gcloud-docker", command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'kubectl', image: 'gcr.io/cloud-builders/kubectl', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
   hostPathVolume(mountPath: '/usr/bin/docker', hostPath: '/usr/bin/docker'),
