@@ -5,12 +5,14 @@ def label = "jenkins-execution-worker-${UUID.randomUUID().toString()}"
 
 if (env.TAG_NAME && env.TAG_NAME.contains("release")) {
   kubeCloud = "production"
+  kubecSecretsId = 'gl-launcher-prod-secrets'
 } else {
   kubeCloud = "staging"
+  kubecSecretsId = 'gl-launcher-staging-secrets'
 }
 
 podTemplate(label: label, cloud: "${kubeCloud}", containers: [
-  containerTemplate(name: 'gcloud', image: "gcr.io/${project}/gcloud-docker", command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'gcloud', image: "lakoo/node-gcloud-docker", command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'kubectl', image: 'gcr.io/cloud-builders/kubectl', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
@@ -48,7 +50,7 @@ volumes: [
 
     stage('Deploy') {
       container('kubectl') {
-         withCredentials([file(credentialsId: 'gl-launcher-staging-secrets', variable: 'FILE')]) {
+         withCredentials([file(credentialsId: kubecSecretsId, variable: 'FILE')]) {
             sh '''
               kubectl get pods && kubectl apply -f $FILE
             '''
