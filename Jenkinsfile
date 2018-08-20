@@ -10,8 +10,11 @@ if (env.BRANCH_NAME == "production") {
 podTemplate(label: label, cloud: "${kubeCloud}", containers: [
   containerTemplate(name: 'gccloud', image: 'docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
-], volumes: [hostPathVolume(montPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) 
-{
+],
+volumes: [
+  hostPathVolume(mountPath: '/usr/bin/docker', hostPath: '/usr/bin/docker'),
+  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+]){
   node(label) {
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
