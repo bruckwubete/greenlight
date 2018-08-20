@@ -8,9 +8,9 @@ if (env.BRANCH_NAME == "production") {
   kubeCloud = "staging"
 }
 podTemplate(label: label, cloud: "${kubeCloud}", containers: [
-  containerTemplate(name: 'gccloud', image: 'lakoo/node-gcloud-docker'),
+  containerTemplate(name: 'gccloud', image: 'lakoo/node-gcloud-docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
-]) 
+], volumes: [hostPathVolume(montPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) 
 {
   node(label) {
     def myRepo = checkout scm
