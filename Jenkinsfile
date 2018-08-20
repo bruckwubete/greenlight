@@ -8,7 +8,7 @@ if (env.BRANCH_NAME == "production") {
   kubeCloud = "staging"
 }
 podTemplate(label: label, cloud: "${kubeCloud}", containers: [
-  containerTemplate(name: 'gccloud', image: 'lakoo/node-gcloud-docker', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'gccloud', image: 'docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
 ], volumes: [hostPathVolume(montPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) 
 {
@@ -22,8 +22,8 @@ podTemplate(label: label, cloud: "${kubeCloud}", containers: [
     stage('Build Build') {
       container('gccloud') {
             withCredentials([file(credentialsId: 'cloud-datastore-user-account-creds', variable: 'FILE')]) {
-                sh "gcloud auth activate-service-account --key-file=$FILE"
-                sh "gcloud docker -- build -t ${imageTag} . && gcloud docker -- push ${imageTag}"
+                // sh "gcloud auth activate-service-account --key-file=$FILE"
+                sh "docker build -t ${imageTag} . && docker push ${imageTag}"
             }
       }
     }
