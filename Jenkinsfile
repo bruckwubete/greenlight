@@ -21,8 +21,8 @@ podTemplate(label: label, cloud: "${kubeCloud}", containers: [
     stage('Build Build') {
       container('gccloud') {
             withCredentials([file(credentialsId: 'cloud-datastore-user-account-creds', variable: 'FILE')]) {
-                sh "cat $FILE && gcloud auth activate-service-account cloud-datastore-user-account@ci-cd-for-bn.iam.gserviceaccount.com --key-file=$FILE --project=ci-cd-for-bn"
-                sh "gcloud builds submit -t ${imageTag} ."
+                sh "gcloud auth activate-service-account --key-file=$FILE"
+                sh "docker build -t ${imageTag} . && docker push ${imageTag}"
             }
       }
     }
