@@ -12,7 +12,7 @@ if (env.TAG_NAME && env.TAG_NAME.contains("release")) {
 }
 
 podTemplate(label: label, cloud: "${kubeCloud}", containers: [
-  containerTemplate(name: 'gcloud', image: "lakoo/node-gcloud-docker", command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'gcloud', image: "gcr.io/ci-cd-for-bn/gcloud-docker", command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'kubectl', image: 'gcr.io/cloud-builders/kubectl', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
