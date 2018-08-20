@@ -20,7 +20,7 @@ podTemplate(label: label, cloud: "${kubeCloud}", containers: [
 
     stage('Build Build') {
       container('gccloud') {
-         sh "gcloud container builds submit -t ${imageTag} ."
+         sh "gcloud builds submit -t ${imageTag} ."
       }
     }
 
