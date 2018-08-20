@@ -12,7 +12,7 @@ if (env.BRANCH_NAME == "production") {
 pipeline {
   agent {
     kubernetes {
-      cloud "${kubeCloud}"
+      cloud sh(returnStdout: true, script: "echo ${kubeCloud}")
       defaultContainer 'jnlp'
       yaml """
         apiVersion: v1
