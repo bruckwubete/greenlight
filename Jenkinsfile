@@ -25,8 +25,9 @@ volumes: [
     stage('Build Build') {
       container('gccloud') {
             withCredentials([file(credentialsId: 'cloud-datastore-user-account-creds', variable: 'FILE')]) {
-                // sh "gcloud auth activate-service-account --key-file=$FILE"
-                sh "docker build -t ${imageTag} . && docker push ${imageTag}"
+                sh "gcloud auth activate-service-account --key-file=$FILE"
+                
+                sh "gcloud docker -- build -t ${imageTag} . && gcloud docker -- push ${imageTag}"
             }
       }
     }
