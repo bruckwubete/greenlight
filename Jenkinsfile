@@ -13,12 +13,13 @@ pipeline {
   agent {
     kubernetes {
       cloud "${kubeCloud}"
-      label "${label}"
       defaultContainer 'jnlp'
       yaml """
         apiVersion: v1
         kind: Pod
         metadata:
+          labels:
+            app: ${label}
         labels:
           component: ci
         spec:
