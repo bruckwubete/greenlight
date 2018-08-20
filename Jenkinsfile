@@ -29,15 +29,15 @@ volumes: [
       container('gcloud') {
             withCredentials([file(credentialsId: 'cloud-datastore-user-account-creds', variable: 'FILE')]) {
                 sh "gcloud auth activate-service-account --key-file=$FILE"
-                if (env.TAG_NAME && env.TAG_NAME.contains("release")) {
+                if (kubecloud == "staging")) {
                    def imageTag = "gcr.io/${project}/${appName}:${gitBranch}.${env.BUILD_NUMBER}.${gitCommit}"
                    sh "gcloud docker -- build -t ${imageTag} . && gcloud docker -- push ${imageTag}"
                 } else {
                    def imageTag = "gcr.io/${project}/${appName}:${gitTag}"
                    withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER'), string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')]) {
-                     sh "gcloud docker -- build -t ${imageTag} -t '$DOCKER_USER/${project}:${greenlightVersion}' -t '$DOCKER_USER/${project}:${gitTag} . && gcloud docker -- push ${imageTag}"
+                     sh "gcloud docker -- build -t ${imageTag} -t '$DOCKER_USER/${project}:${greenlightVersion}' -t '$DOCKER_USER/${project}:${gitTag}' . && gcloud docker -- push ${imageTag}"
                      sh "docker login -u $DOCKER_USER -p $DOCKER_PASSWORD"
-                     sh "docker push '$DOCKER_USER/${project}:${greenlightVersion}' '$DOCKER_USER/${project}:${gitTag}"
+                     sh "docker push '$DOCKER_USER/${project}:${greenlightVersion}' '$DOCKER_USER/${project}:${gitTag}'"
                    }
                   
                 }
