@@ -1,17 +1,17 @@
 def project = 'ci-cd-for-bn'
 def  appName = 'greenlight'
 def  imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-def cloud = ""
+def kubeCloud = ""
 if (env.BRANCH_NAME == "production") {
-  cloud = "production"
+  kubeCloud = "production"
 } else {
-  cloud = "staging"
+  kubeCloud = "staging"
 }
 
 pipeline {
   agent {
     kubernetes {
-      cloud "${cloud}"
+      cloud kubeCloud
       label 'jenkins-gl-jenkins-deployer-slave'
       defaultContainer 'jnlp'
       yaml """
