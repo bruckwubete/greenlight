@@ -15,7 +15,16 @@
 
 <tr>
   <td>
-    <div><%= recording[:name] %></div>
+    <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
+      <text id='recording-text'>
+        <% if recording[:metadata][:name] %>
+          <%= recording[:metadata][:name] %>
+        <% else %>
+          <%= recording[:name] %>
+        <% end %>
+      </text>
+      <a><i id="edit-record" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
+    </div>
     <div class="small text-muted">
       <%= t("recording.recorded_on", date: recording_date(recording[:startTime])) %>
     </div>
@@ -30,10 +39,10 @@
       <% end %>
     </td>
   <% end %>
-  <td class="text-left">
+  <td id="recording-length" class="text-left" data-full-length="<%=recording[:playbacks].first[:length]%>">
     <%= recording_length(recording[:playbacks]) %>
   </td>
-  <td class="text-left">
+  <td id="recording-users" class="text-left">
     <%= recording[:participants] || "-" %>
   </td>
   <td class="text-left">

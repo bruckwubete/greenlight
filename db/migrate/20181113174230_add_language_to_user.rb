@@ -16,18 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-class UserMailer < ApplicationMailer
-  default from: Rails.configuration.email_sender
-
-  def verify_email(user, url)
-    @user = user
-    @url = url
-    mail(to: @user.email, subject: t('landing.welcome'))
-  end
-
-  def password_reset(user, url)
-    @user = user
-    @url = url
-    mail to: user.email, subject: t('reset_password.subtitle')
+class AddLanguageToUser < ActiveRecord::Migration[5.0]
+  def change
+    add_column :users, :language, :string, default: 'default'
   end
 end

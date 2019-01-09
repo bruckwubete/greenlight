@@ -22,12 +22,14 @@ en:
       user:
         accepted_terms: "Terms and Conditions"
   bigbluebutton: BigBlueButton
+  bigbluebutton_exception: Oops, there was an error when starting the meeting!
   cancel: Cancel
   copy: Copy
   delete: Delete
   delivery_error: An error occured during email delivery. Please contact an administrator!
   docs: Documentation
   email: Email
+  email_sent: Email Sent!
   enter_your_name: Enter your name!
   errors:
     internal:
@@ -48,6 +50,7 @@ en:
     unprocessable:
       message: Oops! Request is unprocessable.
       help: Unforunately this isn't a valid request.
+  expired_reset_token: Password reset link has expired!
   features:
     title: Features
     rooms: Personalized Rooms
@@ -56,6 +59,10 @@ en:
     authentication: User Authentication
   footer:
     powered_by: Powered by %{href}.
+  forgot_password:
+    subtitle: Forgot Password
+    email: Email
+    submit: Submit
   go_back: Go back
   greenlight: Greenlight
   header:
@@ -76,8 +83,19 @@ en:
     video: Watch our tutorial on using Greenlight
     upgrade: Show me how to upgrade to 2.0!
     version: We've released a new version of Greenlight, but your database isn't compatible.
+  language_options:
+    default: Default (browser language)
+    ar: Arabic
+    de: German
+    el: Greek
+    en: English
+    es: Spanish
+    fr: French
+    pt-br: Portuguese (Brazil)
+    ru: Russian
   ldap_error: Unable to connect to the LDAP server. Please check your LDAP configuration in the env file and ensure your server is running.
   login: Sign in
+  max_concurrent: The maximum number of concurrent sessions allowed has been reached!
   modal:
     create_room:
       auto_join: Automatically join me into the room.
@@ -98,8 +116,18 @@ en:
     login:
       or: or
       with: Sign in with %{provider}
+      forgot_password: Forgot Password?
+    rename_recording:
+
+    rename_room:
+      name_placeholder: Enter a new room name...
+  name_update_success: Room name successfully changed!
+  no_user_email_exists: There is no existing user with the email specified. Please make sure you typed it correctly.
   omniauth_error: An error occured while authenticating with omniauth. Please try again or contact an administrator!
   password: Password
+  password_empty_notice: Password cannot be empty.
+  password_reset_success: Password has been reset.
+  password_different_notice: Password Confirmation does not match.
   provider:
     google: Google
     microsoft_office365: Office 365
@@ -107,6 +135,7 @@ en:
   recording:
     email: Email Recording
     no_recordings: This room has no %{inject}recordings.
+    no_matched_recordings: No %{inject} recordings match your search.
     recorded_on: Recorded on %{date}
     table:
       name: Name
@@ -118,6 +147,12 @@ en:
     visibility:
       public: Public
       unlisted: Unlisted
+  rename: Rename
+  reset_password:
+    subtitle: Reset Password
+    password: New Password
+    confirm: New Password Confirmation
+    update: Update Password
   room:
     invited: You have been invited to join
     invite_participants: Invite Participants
@@ -135,6 +170,7 @@ en:
   settings:
     account:
       fullname: Fullname
+      language: Language
       provider: Provider
       image: Image
       image_url: Profile Image URL

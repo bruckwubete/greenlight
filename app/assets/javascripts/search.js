@@ -14,29 +14,40 @@
 // You should have received a copy of the GNU Lesser General Public License along
 // with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-// Handle changing of settings tabs.
 $(document).on('turbolinks:load', function(){
   var controller = $("body").data('controller');
   var action = $("body").data('action');
 
-  // Only run on the settings page.
-  if ((controller == "users" && action == "edit") || (controller == "users" && action == "update")){
-    var settingsButtons = $('.setting-btn');
-    var settingsViews = $('.setting-view');
+  if(controller == "rooms" && action == "show" || controller == "rooms" && action == "update"){
+    var search_input = $('#search_bar');
 
-    settingsButtons.each(function(i, btn) {
-      if(!$(btn).hasClass("active")){ $(settingsViews[i]).hide(); }
-      $(btn).click(function(){
-        $(btn).addClass("active");
-        settingsViews.each(function(i, view){
-          if($(view).attr("id") == $(btn).attr("id")){
-            $(view).show();
-          } else {
-            $(settingsButtons[i]).removeClass("active");
-            $(view).hide();
-          }
-        });
+    search_input.bind("keyup", function(){
+
+      // Retrieve the current search query
+      var search_query = search_input.find(".form-control").val();
+
+      //Search for recordings and display them based on name match
+      var recordings_found = 0;
+
+      var recordings = $('#recording-table').find('tr');
+
+      recordings.each(function(){
+        if($(this).find('text').text().toLowerCase().includes(search_query.toLowerCase())){
+          recordings_found = recordings_found + 1;
+          $(this).show();
+        }
+        else{
+          $(this).hide();
+        }
       });
+
+      // Show "No recordings match your search" if no recordings found
+      if(recordings_found === 0){
+        $('#no_recordings_found').show();
+      }
+      else{
+        $('#no_recordings_found').hide();
+      }
     });
   }
 });

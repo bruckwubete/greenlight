@@ -31,6 +31,9 @@ Rails.application.routes.draw do
   # Redirect to terms page
   match '/terms', to: 'users#terms', via: [:get, :post]
 
+  # Password reset resources.
+  resources :password_resets, only: [:new, :create, :edit, :update]
+
   # User resources.
   scope '/u' do
     # Verification Routes
@@ -61,10 +64,11 @@ Rails.application.routes.draw do
   # Extended room routes.
   scope '/:room_uid' do
     post '/', to: 'rooms#join'
+    patch '/', to: 'rooms#update', as: :update_room
     post '/start', to: 'rooms#start', as: :start_room
     get '/logout', to: 'rooms#logout', as: :logout_room
 
-    # Mange recordings.
+    # Manage recordings
     scope '/:record_id' do
       post '/', to: 'rooms#update_recording', as: :update_recording
       delete '/', to: 'rooms#delete_recording', as: :delete_recording
